@@ -1,33 +1,21 @@
 import { Router } from "express";
-import pool from "../config/db/connection.js";
+import * as taskController from "./controller.js";
 
-const router = Router()
+const router = Router();
 
-router.get("/tasks", async (req, res) => {
-  try {
-    const [results] = await pool.query("SELECT * FROM Task");
-    res.json(results);
-  } catch (err) {
-    res.status(500).json({ error: "Erro ao buscar tarefas" });
-  }
-});
+// Get all tasks
+router.get("/tasks", taskController.getTasks);
 
-router.post("/tasks", async (req, res) => {
-  const { title, description, status } = req.body;
+// Create a new task
+router.post("/tasks", taskController.createTask);
 
-  if (!title || !status) {
-    return res.status(400).json({ error: "Título e status são obrigatórios" });
-  }
+// Get task by ID
+router.get("/tasks/:id", taskController.getTaskById);
 
-  try {
-    const [result] = await pool.query(
-      "INSERT INTO Task (title, description, status) VALUES (?, ?, ?)",
-      [title, description, status]
-    );
-    res.status(201).json({ message: "Tarefa criada", taskId: result.insertId });
-  } catch (err) {
-    res.status(500).json({ error: "Erro ao criar tarefa" });
-  }
-});
+// Update task by ID
+router.put("/tasks/:id", taskController.updateTask);
 
-export default router
+// Delete task by ID
+router.delete("/tasks/:id", taskController.deleteTask);
+
+export default router;

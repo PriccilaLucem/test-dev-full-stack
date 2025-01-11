@@ -1,5 +1,5 @@
 import taskRoutes from "../tasks/routes.js";
-import { notFoundHandler, errorHandler } from "./errorHandlerMiddleware.js";
+import { notFoundHandler, errorHandler } from "../middlewares/errorHandlerMiddleware.js";
 
 const routes = (app) => {
     app.use("/api", taskRoutes)
